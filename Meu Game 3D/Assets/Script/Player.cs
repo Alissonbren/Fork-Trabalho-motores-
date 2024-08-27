@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Mail;
@@ -9,6 +10,7 @@ public class Player : MonoBehaviour
 {
     public int velocidade = 10;
     public int forcaPulo = 7;
+    private bool noChao;
     Rigidbody rb;
    
     void Start()
@@ -16,7 +18,14 @@ public class Player : MonoBehaviour
         TryGetComponent(out rb);
     }
 
-   
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!noChao && collision.gameObject.tag == "Chão")
+        {
+            noChao = true;
+        }
+    }
+
     void Update()
     {   
         float h = Input.GetAxis("Horizontal");
@@ -24,9 +33,10 @@ public class Player : MonoBehaviour
         Vector3 direcao = new Vector3(h, 0, v);
         rb.AddForce(direcao * velocidade * Time.deltaTime, ForceMode.Impulse);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && noChao)
         {
             rb.AddForce(Vector3.up * forcaPulo, ForceMode.Impulse);
+            noChao = false;
         }
         
         

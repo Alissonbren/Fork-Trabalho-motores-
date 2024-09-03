@@ -4,35 +4,40 @@ using UnityEngine;
 using TMPro;
 public class GameManager : MonoBehaviour
 {
-    public TextMeshProUGUI HUD, Vitoria;
+
+
+
+    public TextMeshProUGUI hud, msgVitoria;
 
     public int restantes;
+    public AudioClip clipMoeda, clipVitoria;
+
+    private AudioSource source;
+    
+    
+    // Start is called before the first frame update
     void Start()
     {
-        restantes = FindObjectOfType<Moeda>().Length;
+        TryGetComponent(out source);
+        restantes = FindObjectsOfType<Moeda>().Length;
 
-        HUD.text = $"Moedas restantes: {restantes}";
-
+        hud.text = $"Moedas restantes: {restantes}";
     }
 
     public void SubtrairMoedas(int valor)
     {
         restantes -= valor;
-        HUD.text = $"Moedas restantes: {restantes}";
+        hud.text = $"Moedas restantes: {restantes}";
+        source.PlayOneShot(clipMoeda);
 
         if (restantes <= 0)
         {
-            Vitoria.text = "Parabéns, você terminou a fase 1!";
+            msgVitoria.text = "Parabéns, você venceu a primeira fase!";
+            source.Stop();
+            source.PlayOneShot(clipVitoria);
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
+
     // Update is called once per frame
     void Update()
     {
